@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="111d8a75-f2b6-4823-80b1-92620fa0a412" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="FxmlFile" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="$APPLICATION_HOME_DIR$/plugins/maven/lib/maven3" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="1lvge8qSWtRKNoNN9dgBNyASlSM" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/library/src/main/java" />
+      <recent name="$PROJECT_DIR$/cloud-client/src/main/java" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.ClientApp">
+    <configuration name="ClientApp" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ClientApp" />
+      <module name="cloud-client" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Server" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Server" />
+      <module name="cloud-server" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.ClientApp" />
+        <item itemvalue="Application.Server" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="111d8a75-f2b6-4823-80b1-92620fa0a412" name="Default Changelist" comment="" />
+      <created>1608483074903</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1608483074903</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$" />
+    </ignored-roots>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="763" y="276" width="1024" height="839" key="#Project_Structure" timestamp="1608586087290">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="763" y="276" width="1024" height="839" key="#Project_Structure/0.0.2560.1400@0.0.2560.1400" timestamp="1608586087290" />
+    <state x="1088" y="408" width="374" height="575" key="#com.intellij.ide.util.MemberChooser" timestamp="1608580272960">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1088" y="408" width="374" height="575" key="#com.intellij.ide.util.MemberChooser/0.0.2560.1400@0.0.2560.1400" timestamp="1608580272960" />
+    <state x="839" y="191" width="862" height="1004" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1608582121601">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="839" y="191" width="862" height="1004" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1608582121601" />
+    <state x="1013" y="449" width="524" height="494" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1608576064777">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1013" y="449" width="524" height="494" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1608576064777" />
+    <state x="951" y="440" width="637" height="505" key="FileChooserDialogImpl" timestamp="1608586680221">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="951" y="440" width="637" height="505" key="FileChooserDialogImpl/0.0.2560.1400@0.0.2560.1400" timestamp="1608586680221" />
+    <state x="1141" y="599" key="Github.ShareDialog" timestamp="1608586436039">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1141" y="599" key="Github.ShareDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1608586436039" />
+    <state x="1038" y="400" width="474" height="591" key="Github.UntrackedFilesDialog" timestamp="1608586446449">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1038" y="400" width="474" height="591" key="Github.UntrackedFilesDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1608586446449" />
+    <state width="2518" height="396" key="GridCell.Tab.0.bottom" timestamp="1608585303972">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="2518" height="396" key="GridCell.Tab.0.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1608585303972" />
+    <state width="2518" height="396" key="GridCell.Tab.0.center" timestamp="1608585303971">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="2518" height="396" key="GridCell.Tab.0.center/0.0.2560.1400@0.0.2560.1400" timestamp="1608585303971" />
+    <state width="2518" height="396" key="GridCell.Tab.0.left" timestamp="1608585303971">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="2518" height="396" key="GridCell.Tab.0.left/0.0.2560.1400@0.0.2560.1400" timestamp="1608585303971" />
+    <state width="2518" height="396" key="GridCell.Tab.0.right" timestamp="1608585303972">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="2518" height="396" key="GridCell.Tab.0.right/0.0.2560.1400@0.0.2560.1400" timestamp="1608585303972" />
+    <state x="763" y="276" width="1024" height="839" key="SettingsEditor" timestamp="1608586750808">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="763" y="276" width="1024" height="839" key="SettingsEditor/0.0.2560.1400@0.0.2560.1400" timestamp="1608586750808" />
+    <state x="875" y="435" width="800" height="522" key="Vcs.Push.Dialog.v2" timestamp="1608586456444">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="875" y="435" width="800" height="522" key="Vcs.Push.Dialog.v2/0.0.2560.1400@0.0.2560.1400" timestamp="1608586456444" />
+    <state x="696" y="404" width="1157" height="584" key="new project wizard" timestamp="1608575908200">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="696" y="404" width="1157" height="584" key="new project wizard/0.0.2560.1400@0.0.2560.1400" timestamp="1608575908200" />
+    <state x="943" y="318" width="672" height="678" key="search.everywhere.popup" timestamp="1608582429446">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="943" y="318" width="672" height="678" key="search.everywhere.popup/0.0.2560.1400@0.0.2560.1400" timestamp="1608582429446" />
+  </component>
+</project>

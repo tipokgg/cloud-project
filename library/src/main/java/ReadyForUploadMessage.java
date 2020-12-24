@@ -2,10 +2,9 @@ import java.io.File;
 
 public class ReadyForUploadMessage extends AbstractMessage {
 
-    // пока бесполезный класс
     // подтверждение о готовности стороны принять файл
 
-    File file;
+    private File file;
 
     public ReadyForUploadMessage() {
     }
@@ -14,5 +13,11 @@ public class ReadyForUploadMessage extends AbstractMessage {
         this.file = file;
     }
 
+    public File getFile() {
+        return file;
+    }
 
+    public void setFile(File file) {
+        this.file = file;
+    }
 }

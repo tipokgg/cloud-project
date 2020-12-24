@@ -3,8 +3,39 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="111d8a75-f2b6-4823-80b1-92620fa0a412" name="Default Changelist" comment="" />
+    <list default="true" id="111d8a75-f2b6-4823-80b1-92620fa0a412" name="Default Changelist" comment="first commit. only file sender with hardcode here...">
+      <change afterPath="$PROJECT_DIR$/cloud-client/files/somefile.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cloud-client/src/main/resources/log4j.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/library/src/main/java/FileListMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/library/src/main/java/FileListRequestMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloud-client/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/cloud-client/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloud-client/src/main/java/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/cloud-client/src/main/java/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloud-client/src/main/resources/layout.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/cloud-client/src/main/resources/layout.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloud-server/src/main/java/ClientMessageHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/cloud-server/src/main/java/ClientMessageHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/library/src/main/java/ChunkFileMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/library/src/main/java/ChunkFileMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/library/src/main/java/ReadyForUploadMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/library/src/main/java/ReadyForUploadMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -29,7 +60,9 @@
     </option>
   </component>
   <component name="ProjectId" id="1lvge8qSWtRKNoNN9dgBNyASlSM" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
     <option name="autoscrollToSource" value="true" />
@@ -39,7 +72,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/cloud-client/src/main/resources" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -47,6 +80,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/cloud-client/src/main/resources" />
       <recent name="$PROJECT_DIR$/library/src/main/java" />
       <recent name="$PROJECT_DIR$/cloud-client/src/main/java" />
     </key>
@@ -82,26 +116,56 @@
       <option name="presentableId" value="Default" />
       <updated>1608483074903</updated>
     </task>
+    <task id="LOCAL-00001" summary="first commit. only file sender with hardcode here...">
+      <created>1608586981926</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1608586981926</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
+    <MESSAGE value="first commit. only file sender with hardcode here..." />
+    <option name="LAST_COMMIT_MESSAGE" value="first commit. only file sender with hardcode here..." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="763" y="276" width="1024" height="839" key="#Project_Structure" timestamp="1608586087290">
+    <state x="1012" y="534" width="525" height="323" key="#Notifications" timestamp="1608587197784">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="763" y="276" width="1024" height="839" key="#Project_Structure/0.0.2560.1400@0.0.2560.1400" timestamp="1608586087290" />
-    <state x="1088" y="408" width="374" height="575" key="#com.intellij.ide.util.MemberChooser" timestamp="1608580272960">
+    <state x="1012" y="534" width="525" height="323" key="#Notifications/0.0.2560.1400@0.0.2560.1400" timestamp="1608587197784" />
+    <state x="763" y="276" width="1024" height="839" key="#Project_Structure" timestamp="1608846069786">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="1088" y="408" width="374" height="575" key="#com.intellij.ide.util.MemberChooser/0.0.2560.1400@0.0.2560.1400" timestamp="1608580272960" />
-    <state x="839" y="191" width="862" height="1004" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1608582121601">
+    <state x="763" y="276" width="1024" height="839" key="#Project_Structure/0.0.2560.1400@0.0.2560.1400" timestamp="1608846069786" />
+    <state x="1020" y="504" width="515" height="384" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1608842535288">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="839" y="191" width="862" height="1004" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1608582121601" />
+    <state x="1020" y="504" width="515" height="384" key="#com.intellij.fileTypes.FileTypeChooser/0.0.2560.1400@0.0.2560.1400" timestamp="1608842535288" />
+    <state x="1088" y="408" width="374" height="575" key="#com.intellij.ide.util.MemberChooser" timestamp="1608848807012">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1088" y="408" width="374" height="575" key="#com.intellij.ide.util.MemberChooser/0.0.2560.1400@0.0.2560.1400" timestamp="1608848807012" />
+    <state x="839" y="191" width="862" height="1004" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1608831388925">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="839" y="191" width="862" height="1004" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1608831388925" />
     <state x="1013" y="449" width="524" height="494" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1608576064777">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
@@ -110,38 +174,58 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="951" y="440" width="637" height="505" key="FileChooserDialogImpl/0.0.2560.1400@0.0.2560.1400" timestamp="1608586680221" />
-    <state x="1141" y="599" key="Github.ShareDialog" timestamp="1608586436039">
+    <state x="1141" y="599" key="Github.ShareDialog" timestamp="1608587909546">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="1141" y="599" key="Github.ShareDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1608586436039" />
-    <state x="1038" y="400" width="474" height="591" key="Github.UntrackedFilesDialog" timestamp="1608586446449">
+    <state x="1141" y="599" key="Github.ShareDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1608587909546" />
+    <state x="1038" y="400" width="474" height="591" key="Github.UntrackedFilesDialog" timestamp="1608586832972">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="1038" y="400" width="474" height="591" key="Github.UntrackedFilesDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1608586446449" />
-    <state width="2518" height="396" key="GridCell.Tab.0.bottom" timestamp="1608585303972">
+    <state x="1038" y="400" width="474" height="591" key="Github.UntrackedFilesDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1608586832972" />
+    <state width="2518" height="396" key="GridCell.Tab.0.bottom" timestamp="1608848884889">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2518" height="396" key="GridCell.Tab.0.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1608585303972" />
-    <state width="2518" height="396" key="GridCell.Tab.0.center" timestamp="1608585303971">
+    <state width="2518" height="396" key="GridCell.Tab.0.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1608848884889" />
+    <state width="2518" height="396" key="GridCell.Tab.0.center" timestamp="1608848884888">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2518" height="396" key="GridCell.Tab.0.center/0.0.2560.1400@0.0.2560.1400" timestamp="1608585303971" />
-    <state width="2518" height="396" key="GridCell.Tab.0.left" timestamp="1608585303971">
+    <state width="2518" height="396" key="GridCell.Tab.0.center/0.0.2560.1400@0.0.2560.1400" timestamp="1608848884888" />
+    <state width="2518" height="396" key="GridCell.Tab.0.left" timestamp="1608848884888">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2518" height="396" key="GridCell.Tab.0.left/0.0.2560.1400@0.0.2560.1400" timestamp="1608585303971" />
-    <state width="2518" height="396" key="GridCell.Tab.0.right" timestamp="1608585303972">
+    <state width="2518" height="396" key="GridCell.Tab.0.left/0.0.2560.1400@0.0.2560.1400" timestamp="1608848884888" />
+    <state width="2518" height="396" key="GridCell.Tab.0.right" timestamp="1608848884888">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2518" height="396" key="GridCell.Tab.0.right/0.0.2560.1400@0.0.2560.1400" timestamp="1608585303972" />
-    <state x="763" y="276" width="1024" height="839" key="SettingsEditor" timestamp="1608586750808">
+    <state width="2518" height="396" key="GridCell.Tab.0.right/0.0.2560.1400@0.0.2560.1400" timestamp="1608848884888" />
+    <state width="2518" height="486" key="GridCell.Tab.1.bottom" timestamp="1608830385686">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="763" y="276" width="1024" height="839" key="SettingsEditor/0.0.2560.1400@0.0.2560.1400" timestamp="1608586750808" />
-    <state x="875" y="435" width="800" height="522" key="Vcs.Push.Dialog.v2" timestamp="1608586456444">
+    <state width="2518" height="486" key="GridCell.Tab.1.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1608830385686" />
+    <state width="2518" height="486" key="GridCell.Tab.1.center" timestamp="1608830385685">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="875" y="435" width="800" height="522" key="Vcs.Push.Dialog.v2/0.0.2560.1400@0.0.2560.1400" timestamp="1608586456444" />
+    <state width="2518" height="486" key="GridCell.Tab.1.center/0.0.2560.1400@0.0.2560.1400" timestamp="1608830385685" />
+    <state width="2518" height="486" key="GridCell.Tab.1.left" timestamp="1608830385685">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="2518" height="486" key="GridCell.Tab.1.left/0.0.2560.1400@0.0.2560.1400" timestamp="1608830385685" />
+    <state width="2518" height="486" key="GridCell.Tab.1.right" timestamp="1608830385686">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="2518" height="486" key="GridCell.Tab.1.right/0.0.2560.1400@0.0.2560.1400" timestamp="1608830385686" />
+    <state x="763" y="276" width="1024" height="839" key="SettingsEditor" timestamp="1608587716208">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="763" y="276" width="1024" height="839" key="SettingsEditor/0.0.2560.1400@0.0.2560.1400" timestamp="1608587716208" />
+    <state x="875" y="435" width="800" height="522" key="Vcs.Push.Dialog.v2" timestamp="1608587206823">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="875" y="435" width="800" height="522" key="Vcs.Push.Dialog.v2/0.0.2560.1400@0.0.2560.1400" timestamp="1608587206823" />
+    <state x="818" y="438" width="914" height="619" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1608842719612">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="818" y="438" width="914" height="619" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.2560.1400@0.0.2560.1400" timestamp="1608842719612" />
     <state x="696" y="404" width="1157" height="584" key="new project wizard" timestamp="1608575908200">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
@@ -150,5 +234,15 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="943" y="318" width="672" height="678" key="search.everywhere.popup/0.0.2560.1400@0.0.2560.1400" timestamp="1608582429446" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.IllegalStateException" package="java.lang" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

@@ -10,6 +10,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.net.Socket;
 import java.net.URL;
 import java.nio.file.Files;
@@ -38,8 +39,6 @@ public class Controller implements Initializable {
             Socket socket = new Socket("localhost", 8189);
             os = new ObjectEncoderOutputStream(socket.getOutputStream());
             is = new ObjectDecoderInputStream(socket.getInputStream());
-
-
 
             Thread readThread = new Thread(() -> {
                 while (true) {
@@ -123,6 +122,19 @@ public class Controller implements Initializable {
             serverView.getItems().addAll(((FileListMessage) msg).getFilesFromServer());
         } else if (msg instanceof ReadyForUploadMessage) {
             uploadFileToServer((ReadyForUploadMessage) msg);
+        } else if (msg instanceof ChunkFileMessage) {
+            ChunkFileMessage chunkFileMessage = (ChunkFileMessage) msg;
+            // выводы в консоль для проверок, что происходит
+            String filePath = clientDir + "/" + ((ChunkFileMessage) msg).getFile().getName(); // //TODO
+            // записываем через RandomAccessFile, предвариьельно выбрав позицию, в какое место файла писать
+            // информацию о позиции получаем из сериализованного объекта ChunkFileMessage
+            try (RandomAccessFile raf = new RandomAccessFile(filePath, "rw")) {
+                raf.seek(chunkFileMessage.getPosition());
+                raf.write(chunkFileMessage.getData());
+            }
+        } else if (msg instanceof UpdateClientSideMessage) {
+            clientView.getItems().clear();
+            clientView.getItems().addAll(getClientFiles());
         }
     }
     
@@ -140,6 +152,10 @@ public class Controller implements Initializable {
     }
 
     public void download(ActionEvent actionEvent) throws IOException {
+        os.writeObject(new RequestFileDownloadMessage(serverView.getSelectionModel().getSelectedItem(), userName));
+    }
 
+    public void delete(ActionEvent actionEvent) throws IOException {
+            //TODO
     }
 }

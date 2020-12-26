@@ -4,7 +4,10 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.Region;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.File;
@@ -31,6 +34,7 @@ public class Controller implements Initializable {
     private final String userName = "user1";
     private ObjectEncoderOutputStream os;
     private ObjectDecoderInputStream is;
+    private final int chunkSize = 1024;
 
     
     @Override
@@ -48,7 +52,7 @@ public class Controller implements Initializable {
                             // плюс некорректно обновлялся ListView при удалении файлов из папки сервера
                             try {
                                 processServerMessage(msg);
-                            } catch (IOException | ClassNotFoundException e) {
+                            } catch (IOException | InterruptedException e) {
                                 e.printStackTrace();
                             }
                         });
@@ -61,7 +65,7 @@ public class Controller implements Initializable {
             readThread.start();
 
             clientView.getItems().addAll(getClientFiles());
-            os.writeObject(new FileListRequestMessage(userName));
+            os.writeObject(new RequestAuthToServerMessage(userName, "123123"));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -74,38 +78,32 @@ public class Controller implements Initializable {
     }
 
     private void uploadFileToServer(ReadyForUploadMessage msg) throws IOException {
-        File fileForUpload = msg.getFile();
+        File clientSideFile = msg.getClientSideFile();
+        File serverSideFile = msg.getServerSideFile(); // для того, чтобы сервер знал в какую папаку писать
+        long fileLength = clientSideFile.length();
 
-        try (InputStream is = Files.newInputStream(Paths.get(fileForUpload.toURI()))) {
+        // TODO 26.12.20 получение хэша, прикрутить для проверки целостности переданного файла
+        try (InputStream is = Files.newInputStream(Paths.get(clientSideFile.toURI()))) {
             String md5 = DigestUtils.md5Hex(is);
             System.out.println("checksum: " + md5);
         }
 
-        System.out.println("Длина файла в байтах - " + fileForUpload.length());
-        long countOfChunks = fileForUpload.length()/1024 + 1;
-        System.out.println("Будет передано чанков - " + countOfChunks);
-
+        long countOfChunks = fileLength/chunkSize + 1;
 
         new Thread(() -> {
             try {
                 // устанавливаем начальную позичию, откуда читать файл
                 int currentPosition = 0;
-                // в цикле начинаем генерировать чанки, которые являются сериализованными объектами и отправлять на сервер
-                // в чанках есть буффер с данными, вычитанными из файла, что это за файл, какой размер чанка и из какой позиции читались байты
                 for (int i = 0; i < countOfChunks; i++) {
                     if (i != countOfChunks -1) {
-                        os.writeObject(new ChunkFileMessage(fileForUpload, currentPosition, 1024));
+                        os.writeObject(new ChunkFileMessage(serverSideFile, clientSideFile, currentPosition, chunkSize));
                         os.flush();
-                        currentPosition += 1024; // после итерации увеличиваем позицию откуда читать байты на размер чанка
-                        // в последней итерации создаем чанк, равный количеству байт, который осталось считать из файла до конца,
-                        // чтобы не делать полный чанк длиной 1024 байта
+                        currentPosition += chunkSize; //смещение
                     } else {
-                        os.writeObject(new ChunkFileMessage(fileForUpload, currentPosition,fileForUpload.length() - currentPosition));
+                        os.writeObject(new ChunkFileMessage(serverSideFile, clientSideFile, currentPosition,(int) fileLength - currentPosition));
                         os.flush();
                     }
                 }
-
-
 
                 os.writeObject(new FileListRequestMessage(userName)); // обновляем список файлов на сервере
                 os.flush();
@@ -116,16 +114,16 @@ public class Controller implements Initializable {
 
     }
 
-    private void processServerMessage(AbstractMessage msg) throws IOException, ClassNotFoundException {
+    private void processServerMessage(AbstractMessage msg) throws IOException, InterruptedException {
         if (msg instanceof FileListMessage) {
             serverView.getItems().clear();
             serverView.getItems().addAll(((FileListMessage) msg).getFilesFromServer());
         } else if (msg instanceof ReadyForUploadMessage) {
             uploadFileToServer((ReadyForUploadMessage) msg);
-        } else if (msg instanceof ChunkFileMessage) {
+        } else if (msg instanceof ChunkFileMessage) { // TODO вынести в отдельный метод. переделать getServerSideFile и т.д.
             ChunkFileMessage chunkFileMessage = (ChunkFileMessage) msg;
             // выводы в консоль для проверок, что происходит
-            String filePath = clientDir + "/" + ((ChunkFileMessage) msg).getFile().getName(); // //TODO
+            String filePath = clientDir + "/" + ((ChunkFileMessage) msg).getSeverSideFile().getName(); // //TODO
             // записываем через RandomAccessFile, предвариьельно выбрав позицию, в какое место файла писать
             // информацию о позиции получаем из сериализованного объекта ChunkFileMessage
             try (RandomAccessFile raf = new RandomAccessFile(filePath, "rw")) {
@@ -135,6 +133,15 @@ public class Controller implements Initializable {
         } else if (msg instanceof UpdateClientSideMessage) {
             clientView.getItems().clear();
             clientView.getItems().addAll(getClientFiles());
+        } else if (msg instanceof FailAuthMessage) {
+            String userName = ((FailAuthMessage) msg).getUserName();
+
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Failed to log in.\n" +
+                    "Please make sure that you have entered your login (" + userName + ") and password correctly.",
+                    ButtonType.OK);
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            alert.showAndWait();
+
         }
     }
     
@@ -156,6 +163,29 @@ public class Controller implements Initializable {
     }
 
     public void delete(ActionEvent actionEvent) throws IOException {
-            //TODO
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you really want delete \""
+                + serverView.getSelectionModel().getSelectedItem() + "\" from cloud?",
+                ButtonType.YES, ButtonType.NO);
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        alert.showAndWait();
+
+        if (alert.getResult() == ButtonType.YES) {
+            os.writeObject(new RequestFileDeleteMessage(serverView.getSelectionModel().getSelectedItem()));
+            os.flush();
+        }
+
+    }
+
+    public void exit(ActionEvent actionEvent) throws IOException {
+
+        Alert alert = new Alert(Alert.AlertType.WARNING, "Exit from application?",
+                ButtonType.YES, ButtonType.NO);
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        alert.showAndWait();
+
+        if (alert.getResult() == ButtonType.YES) {
+            Platform.exit();
+        }
+
     }
 }

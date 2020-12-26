@@ -3,43 +3,32 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="606.0" prefWidth="682.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
-   <children>
-       <MenuBar VBox.vgrow="NEVER">
-          <menus>
-              <Menu mnemonicParsing="false" text="File">
-                 <items>
-                     <MenuItem mnemonicParsing="false" text="Quit" />
-                 </items>
-              </Menu>
-          </menus>
-       </MenuBar>
-       <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
-          <children>
-              <VBox layoutY="-2.0" prefHeight="680.0" prefWidth="682.0">
-                 <children>
-                     <HBox prefHeight="45.0" prefWidth="682.0">
-                        <children>
-                            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="22.0" prefWidth="389.0" text="Local Files" />
-                            <Label alignment="CENTER" prefHeight="22.0" prefWidth="341.0" text="Server Files" />
-                        </children>
-                     </HBox>
-                     <HBox prefHeight="681.0" prefWidth="682.0">
-                        <children>
-                            <ListView fx:id="clientView" prefHeight="650.0" prefWidth="343.0" />
-                            <ListView fx:id="serverView" prefHeight="658.0" prefWidth="339.0" />
-                        </children>
-                     </HBox>
-                 </children>
-              </VBox>
-               <HBox layoutX="3.0" layoutY="678.0" prefHeight="45.0" prefWidth="676.0">
-                  <children>
-                      <Button mnemonicParsing="false" onAction="#upload" prefHeight="47.0" prefWidth="355.0" text="Upload to server" />
-                      <Button mnemonicParsing="false" onAction="#download" prefHeight="47.0" prefWidth="191.0" text="Download from server" />
-                      <Button mnemonicParsing="false" onAction="#delete" prefHeight="47.0" prefWidth="172.0" text="Delete from server" />
-                  </children>
-               </HBox>
-          </children>
-       </AnchorPane>
-   </children>
+<VBox prefHeight="606.0" prefWidth="682.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Controller">
+    <MenuBar VBox.vgrow="NEVER">
+        <Menu mnemonicParsing="false" text="File">
+            <MenuItem onAction="#exit" mnemonicParsing="false" text="Exit"/>
+        </Menu>
+    </MenuBar>
+    <AnchorPane VBox.vgrow="ALWAYS">
+        <VBox layoutY="-2.0" prefHeight="680.0" prefWidth="682.0">
+            <HBox prefHeight="45.0" prefWidth="682.0">
+                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="22.0" prefWidth="389.0"
+                       text="Local Files"/>
+                <Label alignment="CENTER" prefHeight="22.0" prefWidth="341.0" text="Server Files"/>
+            </HBox>
+            <HBox prefHeight="681.0" prefWidth="682.0">
+                <ListView fx:id="clientView" prefHeight="650.0" prefWidth="343.0"/>
+                <ListView fx:id="serverView" prefHeight="658.0" prefWidth="339.0"/>
+            </HBox>
+        </VBox>
+        <HBox layoutX="3.0" layoutY="678.0" prefHeight="45.0" prefWidth="676.0">
+            <Button mnemonicParsing="false" onAction="#upload" prefHeight="47.0" prefWidth="355.0"
+                    text="Upload to server"/>
+            <Button mnemonicParsing="false" onAction="#download" prefHeight="47.0" prefWidth="191.0"
+                    text="Download from server"/>
+            <Button mnemonicParsing="false" onAction="#delete" prefHeight="47.0" prefWidth="172.0"
+                    text="Delete from server"/>
+        </HBox>
+    </AnchorPane>
 </VBox>

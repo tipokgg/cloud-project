@@ -4,20 +4,31 @@ public class ReadyForUploadMessage extends AbstractMessage {
 
     // подтверждение о готовности стороны принять файл
 
-    private File file;
+    private File serverSideFile;
+    private File clientSideFile;
 
     public ReadyForUploadMessage() {
     }
 
-    public ReadyForUploadMessage(File file) {
-        this.file = file;
+
+    public ReadyForUploadMessage(File clientSideFile, File serverSideFile) {
+        this.clientSideFile = clientSideFile;
+        this.serverSideFile = serverSideFile;
     }
 
-    public File getFile() {
-        return file;
+    public File getClientSideFile() {
+        return clientSideFile;
     }
 
-    public void setFile(File file) {
-        this.file = file;
+    public void setClientSideFile(File clientSideFile) {
+        this.clientSideFile = clientSideFile;
+    }
+
+    public File getServerSideFile() {
+        return serverSideFile;
+    }
+
+    public void setServerSideFile(File serverSideFile) {
+        this.serverSideFile = serverSideFile;
     }
 }

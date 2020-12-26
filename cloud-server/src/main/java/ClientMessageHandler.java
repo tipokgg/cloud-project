@@ -11,47 +11,52 @@ import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class ClientMessageHandler extends SimpleChannelInboundHandler<AbstractMessage> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClientMessageHandler.class);
+    private static final ArrayList<String> testUsers = new ArrayList<>(Arrays.asList("antiv18", "user1"));
+    private static final ConcurrentHashMap<ChannelHandlerContext, AuthorizedClient> users = new ConcurrentHashMap();
 
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, AbstractMessage msg) throws Exception {
 
-        // проверяем что за объект пришёл
-        if (msg instanceof InitFileTransferMessage) {
-            LOG.info("Received: " + msg);
-            // если пришёл запрос на передачу файла от клиента, отправяем сер. объект о готвности приёма
-            ctx.writeAndFlush(new ReadyForUploadMessage(((InitFileTransferMessage) msg).getFile()));
-            // если это чанк с данными
-        } else if (msg instanceof ChunkFileMessage) {
-            // то сначала запишем в переменную
-            ChunkFileMessage chunkFileMessage = (ChunkFileMessage) msg;
-            // выводы в консоль для проверок, что происходит
-            String filePath = "cloud-server/files/user1/" + ((ChunkFileMessage) msg).getFile().getName(); // хардкод. куда пишем файл //TODO получать userName
-            // записываем через RandomAccessFile, предвариьельно выбрав позицию, в какое место файла писать
-            // информацию о позиции получаем из сериализованного объекта ChunkFileMessage
-            try (RandomAccessFile raf = new RandomAccessFile(filePath, "rw")) {
-                raf.seek(chunkFileMessage.getPosition());
-                raf.write(chunkFileMessage.getData());
+        if (msg instanceof RequestAuthToServerMessage) { // авторизация
+            String userName = ((RequestAuthToServerMessage) msg).getUserName();
+            if (testUsers.contains(userName)) {
+                users.put(ctx, new AuthorizedClient(userName));
+                ctx.writeAndFlush(new FileListMessage(getUserFiles(userName)));
+            } else {
+                ctx.writeAndFlush(new FailAuthMessage(userName)); // если ошибка авторизации
             }
-        } else if (msg instanceof RequestFileDownloadMessage) {
-            String fileName = ((RequestFileDownloadMessage) msg).getFileName();
-            String userName = ((RequestFileDownloadMessage) msg).getUserName();
-            File fileForUpload = new File("cloud-server/files/" + userName + "/" + fileName);
+        } else if (msg instanceof InitFileTransferMessage) { //пришёл запрос на upload от клиента
+            InitFileTransferMessage init = (InitFileTransferMessage) msg;
+            ctx.writeAndFlush(new ReadyForUploadMessage(init.getFile(), new File(users.get(ctx).getCurrentDir() + init.getFileName())));
+        } else if (msg instanceof ChunkFileMessage) { // пришёл чанк от клиента
+            ChunkFileMessage chunk = (ChunkFileMessage) msg;
 
-            try (InputStream is = Files.newInputStream(Paths.get(fileForUpload.toURI()))) {
+            try (RandomAccessFile raf = new RandomAccessFile(chunk.getSeverSideFile(), "rw")) {
+                raf.seek(chunk.getPosition());
+                raf.write(chunk.getData());
+            }
+
+        } else if (msg instanceof RequestFileDownloadMessage) { // если  пришёл запрос на загрузку с сервера
+            String fileName = ((RequestFileDownloadMessage) msg).getFileName();
+            File serverSideFile = new File(users.get(ctx).getCurrentDir() + fileName);
+
+            try (InputStream is = Files.newInputStream(Paths.get(serverSideFile.toURI()))) {
                 String md5 = DigestUtils.md5Hex(is);
                 System.out.println("checksum: " + md5);
             }
 
-            System.out.println("Длина файла в байтах - " + fileForUpload.length());
-            long countOfChunks = fileForUpload.length()/1024 + 1;
+            System.out.println("Длина файла в байтах - " + serverSideFile.length());
+            long countOfChunks = serverSideFile.length()/1024 + 1;
             System.out.println("Будет передано чанков - " + countOfChunks);
 
 
@@ -62,13 +67,13 @@ public class ClientMessageHandler extends SimpleChannelInboundHandler<AbstractMe
                 // в чанках есть буффер с данными, вычитанными из файла, что это за файл, какой размер чанка и из какой позиции читались байты
                 for (int i = 0; i < countOfChunks; i++) {
                     if (i != countOfChunks -1) {
-                        ctx.writeAndFlush(new ChunkFileMessage(fileForUpload, currentPosition, 1024));
+                        ctx.writeAndFlush(new ChunkFileMessage(serverSideFile, currentPosition, 1024));
                         ctx.flush();
                         currentPosition += 1024; // после итерации увеличиваем позицию откуда читать байты на размер чанка
                         // в последней итерации создаем чанк, равный количеству байт, который осталось считать из файла до конца,
                         // чтобы не делать полный чанк длиной 1024 байта
                     } else {
-                        ctx.writeAndFlush(new ChunkFileMessage(fileForUpload, currentPosition,fileForUpload.length() - currentPosition));
+                        ctx.writeAndFlush(new ChunkFileMessage(serverSideFile, currentPosition,(int) serverSideFile.length() - currentPosition));
                         ctx.writeAndFlush(new UpdateClientSideMessage()); // чтоьбы клиент обновил список файлов у себя
                         ctx.flush();
                     }
@@ -78,8 +83,7 @@ public class ClientMessageHandler extends SimpleChannelInboundHandler<AbstractMe
 
         } else if (msg instanceof FileListRequestMessage) {
 
-            String userName = ((FileListRequestMessage) msg).getUsername();
-            Path clientDir = Paths.get("cloud-server/files/" + userName);
+            Path clientDir = Paths.get(users.get(ctx).getCurrentDir());
             List<String> clientFiles;
 
             clientFiles = Files.list(clientDir)
@@ -88,7 +92,15 @@ public class ClientMessageHandler extends SimpleChannelInboundHandler<AbstractMe
 
             ctx.writeAndFlush(new FileListMessage(clientFiles));
 
-            LOG.info("Sent list of files for: " + userName);
+            LOG.info("Sent list of files for: " + users.get(ctx).getUserName());
+        } else if (msg instanceof RequestFileDeleteMessage) {
+
+            String fileName = ((RequestFileDeleteMessage) msg).getFileName();
+            Files.deleteIfExists(Paths.get("cloud-server/files/user1/" + fileName));
+
+            String userName = "user1";
+            ctx.writeAndFlush(new FileListMessage(getUserFiles(userName)));
+
         }
 
         else LOG.error("ERROR");
@@ -99,4 +111,15 @@ public class ClientMessageHandler extends SimpleChannelInboundHandler<AbstractMe
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         LOG.info("Client connected!");
     }
+
+
+    private List<String> getUserFiles(String userName) throws IOException {
+        Path clientDir = Paths.get("cloud-server/files/" + userName);
+        return  Files.list(clientDir)
+                .map(path -> path.getFileName().toString())
+                .collect(Collectors.toList());
+    }
+
+
+
 }

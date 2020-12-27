@@ -24,18 +24,15 @@
   <component name="ChangeListManager">
     <list default="true" id="111d8a75-f2b6-4823-80b1-92620fa0a412" name="Default Changelist" comment="big refactoring 26/11/2020">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cloud-client/files/1.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cloud-client/files/Scanned Documents.pdf" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cloud-client/files/efs_1_171_auto.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cloud-client/files/somefile.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cloud-client/src/main/java/ClientApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/cloud-client/src/main/java/ClientApp.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cloud-client/src/main/java/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/cloud-client/src/main/java/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloud-client/src/main/java/LoginScene.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cloud-client/src/main/resources/layout.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/cloud-client/src/main/resources/layout.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cloud-server/files/user1/1.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cloud-server/files/user1/464456.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloud-server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/cloud-server/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloud-server/src/main/java/AuthorizedClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/cloud-server/src/main/java/AuthorizedClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cloud-server/src/main/java/ClientMessageHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/cloud-server/src/main/java/ClientMessageHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/library/src/main/java/ChunkFileMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/library/src/main/java/ChunkFileMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/library/src/main/java/RequestFileDownloadMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/library/src/main/java/RequestFileDownloadMessage.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,10 +172,10 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1020" y="504" width="541" height="384" key="#com.intellij.fileTypes.FileTypeChooser/0.0.2560.1400@0.0.2560.1400" timestamp="1609003146185" />
-    <state x="1088" y="408" width="374" height="575" key="#com.intellij.ide.util.MemberChooser" timestamp="1609079496504">
+    <state x="1088" y="408" width="374" height="575" key="#com.intellij.ide.util.MemberChooser" timestamp="1609106965956">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="1088" y="408" width="374" height="575" key="#com.intellij.ide.util.MemberChooser/0.0.2560.1400@0.0.2560.1400" timestamp="1609079496504" />
+    <state x="1088" y="408" width="374" height="575" key="#com.intellij.ide.util.MemberChooser/0.0.2560.1400@0.0.2560.1400" timestamp="1609106965956" />
     <state x="839" y="191" width="862" height="1004" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1609080153432">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
@@ -187,10 +184,10 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1013" y="449" width="524" height="494" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1608576064777" />
-    <state x="951" y="440" width="637" height="505" key="FileChooserDialogImpl" timestamp="1608993179463">
+    <state x="951" y="440" width="637" height="505" key="FileChooserDialogImpl" timestamp="1609101297208">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="951" y="440" width="637" height="505" key="FileChooserDialogImpl/0.0.2560.1400@0.0.2560.1400" timestamp="1608993179463" />
+    <state x="951" y="440" width="637" height="505" key="FileChooserDialogImpl/0.0.2560.1400@0.0.2560.1400" timestamp="1609101297208" />
     <state x="1141" y="599" key="Github.ShareDialog" timestamp="1608587909546">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
@@ -199,22 +196,22 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1038" y="400" width="474" height="591" key="Github.UntrackedFilesDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1608586832972" />
-    <state width="2518" height="396" key="GridCell.Tab.0.bottom" timestamp="1609086645182">
+    <state width="2518" height="396" key="GridCell.Tab.0.bottom" timestamp="1609108336581">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2518" height="396" key="GridCell.Tab.0.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1609086645182" />
-    <state width="2518" height="396" key="GridCell.Tab.0.center" timestamp="1609086645182">
+    <state width="2518" height="396" key="GridCell.Tab.0.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1609108336581" />
+    <state width="2518" height="396" key="GridCell.Tab.0.center" timestamp="1609108336580">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2518" height="396" key="GridCell.Tab.0.center/0.0.2560.1400@0.0.2560.1400" timestamp="1609086645182" />
-    <state width="2518" height="396" key="GridCell.Tab.0.left" timestamp="1609086645181">
+    <state width="2518" height="396" key="GridCell.Tab.0.center/0.0.2560.1400@0.0.2560.1400" timestamp="1609108336580" />
+    <state width="2518" height="396" key="GridCell.Tab.0.left" timestamp="1609108336580">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2518" height="396" key="GridCell.Tab.0.left/0.0.2560.1400@0.0.2560.1400" timestamp="1609086645181" />
-    <state width="2518" height="396" key="GridCell.Tab.0.right" timestamp="1609086645182">
+    <state width="2518" height="396" key="GridCell.Tab.0.left/0.0.2560.1400@0.0.2560.1400" timestamp="1609108336580" />
+    <state width="2518" height="396" key="GridCell.Tab.0.right" timestamp="1609108336581">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2518" height="396" key="GridCell.Tab.0.right/0.0.2560.1400@0.0.2560.1400" timestamp="1609086645182" />
+    <state width="2518" height="396" key="GridCell.Tab.0.right/0.0.2560.1400@0.0.2560.1400" timestamp="1609108336581" />
     <state width="2518" height="486" key="GridCell.Tab.1.bottom" timestamp="1608830385686">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>

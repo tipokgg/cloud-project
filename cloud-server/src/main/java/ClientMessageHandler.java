@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -28,12 +29,16 @@ public class ClientMessageHandler extends SimpleChannelInboundHandler<AbstractMe
     protected void channelRead0(ChannelHandlerContext ctx, AbstractMessage msg) throws Exception {
 
         if (msg instanceof RequestAuthToServerMessage) { // авторизация
-            String userName = ((RequestAuthToServerMessage) msg).getUserName();
-            if (testUsers.contains(userName)) {
+            String userNameForCheck = ((RequestAuthToServerMessage) msg).getUserName();
+            String passForCheck = ((RequestAuthToServerMessage) msg).getPass();
+            String userName = SQLConnector.getNickname(userNameForCheck, passForCheck);
+            if (userName != null) {
                 users.put(ctx, new AuthorizedClient(userName));
-                ctx.writeAndFlush(new FileListMessage(getUserFiles(ctx)));
+                ctx.writeAndFlush(new SuccessAuthMessage(getUserFiles(ctx)));
+                LOG.info("Success auth from user: " + userName);
             } else {
-                ctx.writeAndFlush(new FailAuthMessage(userName)); // если ошибка авторизации
+                ctx.writeAndFlush(new FailAuthMessage(userNameForCheck)); // если ошибка авторизации
+                LOG.info("Fail auth from user: " + userNameForCheck);
             }
         } else if (msg instanceof InitFileTransferMessage) { //пришёл запрос на upload от клиента
             InitFileTransferMessage init = (InitFileTransferMessage) msg;
@@ -45,13 +50,19 @@ public class ClientMessageHandler extends SimpleChannelInboundHandler<AbstractMe
                 raf.write(chunk.getData());
             }
         } else if (msg instanceof RequestFileDownloadMessage) { // если  пришёл запрос на загрузку с сервера
-            sendFileToClient((RequestFileDownloadMessage) msg, ctx);
+            if (((RequestFileDownloadMessage) msg).getFileName().startsWith("<DIR> ")) {
+                ctx.writeAndFlush(new ExceptionMessage(((RequestFileDownloadMessage) msg).getFileName() +
+                        " is a directory!"));
+            } else sendFileToClient((RequestFileDownloadMessage) msg, ctx);
         } else if (msg instanceof FileListRequestMessage) {
             ctx.writeAndFlush(new FileListMessage(getUserFiles(ctx)));
         } else if (msg instanceof RequestFileDeleteMessage) {
             String fileName = ((RequestFileDeleteMessage) msg).getFileName();
             Files.deleteIfExists(Paths.get(users.get(ctx).getCurrentDir() + fileName));
             ctx.writeAndFlush(new FileListMessage(getUserFiles(ctx)));
+        } else if (msg instanceof DisconnectMessage) {
+            LOG.info("User " + users.get(ctx).getUserName() + " disconnected from the server");
+            users.remove(ctx);
         } else LOG.error("ERROR. Unknown message type!");
     }
 
@@ -61,11 +72,21 @@ public class ClientMessageHandler extends SimpleChannelInboundHandler<AbstractMe
     }
 
 
-    private List<String> getUserFiles(ChannelHandlerContext ctx) throws IOException {
-        Path clientDir = Paths.get(users.get(ctx).getCurrentDir());
-        return  Files.list(clientDir)
-                .map(path -> path.getFileName().toString())
-                .collect(Collectors.toList());
+    private List<String> getUserFiles(ChannelHandlerContext ctx) {
+
+        File[] files = Objects.requireNonNull(new File(users.get(ctx).getCurrentDir()).listFiles());
+        List<String> filesString = new ArrayList<>();
+
+        for (File file : files) {
+            if (file.isDirectory()) {
+                filesString.add("<DIR> " + file.getName());
+            } else {
+                filesString.add(file.getName());
+            }
+        }
+
+        return filesString;
+
     }
 
     private void sendFileToClient(RequestFileDownloadMessage msg, ChannelHandlerContext ctx) throws IOException {
@@ -77,7 +98,6 @@ public class ClientMessageHandler extends SimpleChannelInboundHandler<AbstractMe
 
         try (InputStream is = Files.newInputStream(Paths.get(serverSideFile.toURI()))) {
             md5 = DigestUtils.md5Hex(is);
-            System.out.println("checksum: " + md5);
         }
 
         long countOfChunks = serverSideFile.length()/1024 + 1;

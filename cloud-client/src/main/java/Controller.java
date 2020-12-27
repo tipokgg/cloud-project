@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -33,8 +34,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Controller implements Initializable {
@@ -46,16 +46,20 @@ public class Controller implements Initializable {
     private static final Logger LOG = LoggerFactory.getLogger(Controller.class);
 
     private final String userName = "user1";
-    private final String currentDir = "cloud-client/files/";
+    private String currentDir = "cloud-client/files/";
     private ObjectEncoderOutputStream os;
     private ObjectDecoderInputStream is;
     private final int chunkSize = 1024;
+    private Stage primaryStage;
+    private Scene mainScene;
+    private final String defaultServer = "localhost";
+    private final int defaultPort = 8189;
 
-    
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            Socket socket = new Socket("localhost", 8189);
+            Socket socket = new Socket(defaultServer, defaultPort);
             os = new ObjectEncoderOutputStream(socket.getOutputStream());
             is = new ObjectDecoderInputStream(socket.getInputStream());
 
@@ -83,9 +87,6 @@ public class Controller implements Initializable {
             readThread.setDaemon(true);
             readThread.start();
 
-            clientView.getItems().addAll(getClientFiles());
-            os.writeObject(new RequestAuthToServerMessage(userName, "123123"));
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -105,6 +106,45 @@ public class Controller implements Initializable {
                 raf.seek(chunkFileMessage.getPosition());
                 raf.write(chunkFileMessage.getData());
             }
+        } else if (msg instanceof SuccessAuthMessage) {
+            primaryStage.setScene(mainScene);
+            serverView.getItems().clear();
+            serverView.getItems().addAll(((SuccessAuthMessage) msg).getFilesFromServer());
+            clientView.getItems().addAll(getClientFiles());
+            clientView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+                @Override
+                public void handle(MouseEvent click) {
+
+                    if (click.getClickCount() == 2) {
+                        //Use ListView's getSelected Item
+                        String s = clientView.getSelectionModel()
+                                .getSelectedItem();
+                        if (s.startsWith("<DIR> ")) {
+                            currentDir += s.substring(6) + "/";
+                            try {
+                                clientView.getItems().clear();
+                                clientView.getItems().addAll(getClientFiles()); // TODO refactor в отдельный метод (обновление списка файлов клиента)
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else if (s.equals(". .")) {
+                            String targetDir = currentDir.substring(0, currentDir.length() - 1);
+                            targetDir = targetDir.substring(0, targetDir.lastIndexOf("/") + 1);
+                            currentDir = targetDir;
+                            try {
+                                clientView.getItems().clear(); // TODO refactor в отдельный метод (обновление списка файлов клиента)
+                                clientView.getItems().addAll(getClientFiles());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                    }
+                }
+            });
+
         } else if (msg instanceof UpdateClientSideMessage) {
             LOG.info("Received message for update client side list of files");
             clientView.getItems().clear();
@@ -118,7 +158,13 @@ public class Controller implements Initializable {
                     ButtonType.OK);
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             alert.showAndWait();
-
+        } else if (msg instanceof ExceptionMessage) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, ((ExceptionMessage) msg).getExceptionText(),
+                    ButtonType.OK);
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            alert.setTitle("Error from server");
+            alert.setHeaderText(null);
+            alert.showAndWait();
         }
     }
 
@@ -136,7 +182,6 @@ public class Controller implements Initializable {
         // md5 пока не используется
         try (InputStream is = Files.newInputStream(Paths.get(clientSideFile.toURI()))) {
             String md5 = DigestUtils.md5Hex(is);
-            System.out.println("checksum: " + md5);
         }
 
         long countOfChunks = fileLength/chunkSize + 1;
@@ -168,10 +213,20 @@ public class Controller implements Initializable {
     }
 
     private List<String> getClientFiles() throws IOException {
-        Path clientPath = Paths.get(currentDir);
-        return Files.list(clientPath)
-                .map(path -> path.getFileName().toString())
-                .collect(Collectors.toList());
+
+        File[] files = Objects.requireNonNull(new File(currentDir).listFiles());
+        List<String> filesString = new ArrayList<>();
+        filesString.add(". .");
+
+        for (File file : files) {
+            if (file.isDirectory()) {
+                filesString.add("<DIR> " + file.getName());
+            } else {
+                filesString.add(file.getName());
+            }
+        }
+
+        return filesString;
     }
 
     public void upload(ActionEvent actionEvent) throws IOException {
@@ -204,7 +259,6 @@ public class Controller implements Initializable {
             os.writeObject(new RequestFileDeleteMessage(fileName));
             os.flush();
         }
-
     }
 
     public void exit(ActionEvent actionEvent) throws IOException {
@@ -218,17 +272,15 @@ public class Controller implements Initializable {
 
         if (alert.getResult() == ButtonType.YES) {
             LOG.info("Exit from application");
+            os.writeObject(new DisconnectMessage());
             Platform.exit();
         }
     }
 
-    public void connect(ActionEvent actionEvent) throws IOException {
+    public Scene getLoginScene() throws IOException {
 
-
-
-        // New window (Stage)
         Stage newWindow = new Stage();
-        newWindow.setTitle("Second Stage");
+        newWindow.setTitle("Login");
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
@@ -238,11 +290,11 @@ public class Controller implements Initializable {
         Scene scene = new Scene(grid, 682, 700);
         newWindow.setScene(scene);
 
-        Text scenetitle = new Text("Welcome");
+        Text scenetitle = new Text("Enter your Username and Password");
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(scenetitle, 0, 0, 2, 1);
 
-        Label userName = new Label("User Name:");
+        Label userName = new Label("Username:");
         grid.add(userName, 0, 1);
 
         TextField userTextField = new TextField();
@@ -254,29 +306,59 @@ public class Controller implements Initializable {
         PasswordField pwBox = new PasswordField();
         grid.add(pwBox, 1, 2);
 
+        Label server = new Label("Server:");
+        grid.add(server, 0, 4);
+
+        Label serverAddr = new Label(defaultServer + ":" + defaultPort);
+        grid.add(serverAddr, 1, 4);
+
+
         Button btn = new Button("Sign in");
         HBox hbBtn = new HBox(10);
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
         hbBtn.getChildren().add(btn);
-        grid.add(hbBtn, 1, 4);
+        grid.add(hbBtn, 1, 6);
 
-        final Text actiontarget = new Text();
-        grid.add(actiontarget, 1, 6);
-        newWindow.show();
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent e) {
-                actiontarget.setFill(Color.FIREBRICK);
-                actiontarget.setText(userTextField.getText() + " " + pwBox.getText());
-
+                try {
+                    os.writeObject(new RequestAuthToServerMessage(userTextField.getText(), pwBox.getText()));
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
             }
-
 
         });
 
+        return scene;
 
+    } // логика сцены для авторизации
 
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+    }
+
+    public void setMainScene(Scene mainScene) {
+        this.mainScene = mainScene;
+    }
+
+    public void disconnect(ActionEvent actionEvent) throws IOException {
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Disconnect from the server?",
+                ButtonType.YES, ButtonType.NO);
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        alert.setTitle(null);
+        alert.setHeaderText(null);
+        alert.showAndWait();
+
+        if (alert.getResult() == ButtonType.YES) {
+            clientView.getItems().clear();
+            serverView.getItems().clear();
+            os.writeObject(new DisconnectMessage());
+            primaryStage.setScene(getLoginScene());
+        }
     }
 }

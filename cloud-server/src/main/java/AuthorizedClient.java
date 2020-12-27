@@ -1,13 +1,16 @@
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class AuthorizedClient {
 
     private String userName;
-    private String rootDir;
     private String currentDir;
 
     public AuthorizedClient(String userName) {
         this.userName = userName;
-        this.rootDir = "cloud-server/files/" + userName + "/";
-        this.currentDir = "cloud-server/files/" + userName + "/";
+        setCurrentDir("cloud-server/files/" + userName + "/");
     }
 
     public String getUserName() {
@@ -18,19 +21,19 @@ public class AuthorizedClient {
         this.userName = userName;
     }
 
-    public String getRootDir() {
-        return rootDir;
-    }
-
-    public void setRootDir(String rootDir) {
-        this.rootDir = rootDir;
-    }
-
     public String getCurrentDir() {
         return currentDir;
     }
 
     public void setCurrentDir(String currentDir) {
+        Path path = Paths.get(currentDir);
+        if (!Files.exists(path)) {
+            try {
+                Files.createDirectory(path);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         this.currentDir = currentDir;
     }
 

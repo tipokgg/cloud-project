@@ -31,7 +31,7 @@ public class ClientMessageHandler extends SimpleChannelInboundHandler<AbstractMe
             String userName = ((RequestAuthToServerMessage) msg).getUserName();
             if (testUsers.contains(userName)) {
                 users.put(ctx, new AuthorizedClient(userName));
-                ctx.writeAndFlush(new FileListMessage(getUserFiles(userName)));
+                ctx.writeAndFlush(new FileListMessage(getUserFiles(ctx)));
             } else {
                 ctx.writeAndFlush(new FailAuthMessage(userName)); // если ошибка авторизации
             }
@@ -40,71 +40,19 @@ public class ClientMessageHandler extends SimpleChannelInboundHandler<AbstractMe
             ctx.writeAndFlush(new ReadyForUploadMessage(init.getFile(), new File(users.get(ctx).getCurrentDir() + init.getFileName())));
         } else if (msg instanceof ChunkFileMessage) { // пришёл чанк от клиента
             ChunkFileMessage chunk = (ChunkFileMessage) msg;
-
-            try (RandomAccessFile raf = new RandomAccessFile(chunk.getSeverSideFile(), "rw")) {
+            try (RandomAccessFile raf = new RandomAccessFile(chunk.getReceiverFile(), "rw")) {
                 raf.seek(chunk.getPosition());
                 raf.write(chunk.getData());
             }
-
         } else if (msg instanceof RequestFileDownloadMessage) { // если  пришёл запрос на загрузку с сервера
-            String fileName = ((RequestFileDownloadMessage) msg).getFileName();
-            File serverSideFile = new File(users.get(ctx).getCurrentDir() + fileName);
-
-            try (InputStream is = Files.newInputStream(Paths.get(serverSideFile.toURI()))) {
-                String md5 = DigestUtils.md5Hex(is);
-                System.out.println("checksum: " + md5);
-            }
-
-            System.out.println("Длина файла в байтах - " + serverSideFile.length());
-            long countOfChunks = serverSideFile.length()/1024 + 1;
-            System.out.println("Будет передано чанков - " + countOfChunks);
-
-
-            new Thread(() -> {
-                // устанавливаем начальную позичию, откуда читать файл
-                int currentPosition = 0;
-                // в цикле начинаем генерировать чанки, которые являются сериализованными объектами и отправлять на сервер
-                // в чанках есть буффер с данными, вычитанными из файла, что это за файл, какой размер чанка и из какой позиции читались байты
-                for (int i = 0; i < countOfChunks; i++) {
-                    if (i != countOfChunks -1) {
-                        ctx.writeAndFlush(new ChunkFileMessage(serverSideFile, currentPosition, 1024));
-                        ctx.flush();
-                        currentPosition += 1024; // после итерации увеличиваем позицию откуда читать байты на размер чанка
-                        // в последней итерации создаем чанк, равный количеству байт, который осталось считать из файла до конца,
-                        // чтобы не делать полный чанк длиной 1024 байта
-                    } else {
-                        ctx.writeAndFlush(new ChunkFileMessage(serverSideFile, currentPosition,(int) serverSideFile.length() - currentPosition));
-                        ctx.writeAndFlush(new UpdateClientSideMessage()); // чтоьбы клиент обновил список файлов у себя
-                        ctx.flush();
-                    }
-                }
-
-            }).start();
-
+            sendFileToClient((RequestFileDownloadMessage) msg, ctx);
         } else if (msg instanceof FileListRequestMessage) {
-
-            Path clientDir = Paths.get(users.get(ctx).getCurrentDir());
-            List<String> clientFiles;
-
-            clientFiles = Files.list(clientDir)
-                    .map(path -> path.getFileName().toString())
-                    .collect(Collectors.toList());
-
-            ctx.writeAndFlush(new FileListMessage(clientFiles));
-
-            LOG.info("Sent list of files for: " + users.get(ctx).getUserName());
+            ctx.writeAndFlush(new FileListMessage(getUserFiles(ctx)));
         } else if (msg instanceof RequestFileDeleteMessage) {
-
             String fileName = ((RequestFileDeleteMessage) msg).getFileName();
-            Files.deleteIfExists(Paths.get("cloud-server/files/user1/" + fileName));
-
-            String userName = "user1";
-            ctx.writeAndFlush(new FileListMessage(getUserFiles(userName)));
-
-        }
-
-        else LOG.error("ERROR");
-
+            Files.deleteIfExists(Paths.get(users.get(ctx).getCurrentDir() + fileName));
+            ctx.writeAndFlush(new FileListMessage(getUserFiles(ctx)));
+        } else LOG.error("ERROR. Unknown message type!");
     }
 
     @Override
@@ -113,13 +61,42 @@ public class ClientMessageHandler extends SimpleChannelInboundHandler<AbstractMe
     }
 
 
-    private List<String> getUserFiles(String userName) throws IOException {
-        Path clientDir = Paths.get("cloud-server/files/" + userName);
+    private List<String> getUserFiles(ChannelHandlerContext ctx) throws IOException {
+        Path clientDir = Paths.get(users.get(ctx).getCurrentDir());
         return  Files.list(clientDir)
                 .map(path -> path.getFileName().toString())
                 .collect(Collectors.toList());
     }
 
+    private void sendFileToClient(RequestFileDownloadMessage msg, ChannelHandlerContext ctx) throws IOException {
 
+        String fileName = msg.getFileName();
+        File serverSideFile = new File(users.get(ctx).getCurrentDir() + fileName);
+        File clientSideFile = msg.getClientSideFile();
+        String md5;
 
+        try (InputStream is = Files.newInputStream(Paths.get(serverSideFile.toURI()))) {
+            md5 = DigestUtils.md5Hex(is);
+            System.out.println("checksum: " + md5);
+        }
+
+        long countOfChunks = serverSideFile.length()/1024 + 1;
+
+        new Thread(() -> {
+            // устанавливаем начальную позичию, откуда читать файл
+            int currentPosition = 0;
+            for (int i = 0; i < countOfChunks; i++) {
+                if (i != countOfChunks -1) {
+                    ctx.writeAndFlush(new ChunkFileMessage(clientSideFile, serverSideFile, currentPosition, 1024));
+                    ctx.flush();
+                    currentPosition += 1024; // после итерации увеличиваем позицию откуда читать байты на размер чанка
+                } else {
+                    ctx.writeAndFlush(new ChunkFileMessage(clientSideFile, serverSideFile, currentPosition,(int) serverSideFile.length() - currentPosition));
+                    ctx.writeAndFlush(new UpdateClientSideMessage()); // чтоьбы клиент обновил список файлов у себя
+                    ctx.flush();
+                }
+            }
+
+        }).start();
+    }
 }

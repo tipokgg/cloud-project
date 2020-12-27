@@ -10,11 +10,13 @@ public class ClientApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("layout.fxml"));
-        primaryStage.setScene(new Scene(root));
+        primaryStage.setScene(new LoginScene(primaryStage, root).getScene());
         primaryStage.setResizable(false);
         primaryStage.show();
     }
 }
 
-// TODO 26/11/2020 доделать логику передачи файла с сервера клиенту, после изменения ChunkFileMessage
-// TODO теперь клиент и сервер при передаче файлов используют File со стороны сервера (откуда качают) и со стороны клиента (куда качают)
+// TODO рейнейм файла на сервере
+// TODO авторизация по логину паролю
+// TODO проверять есть ли папка пользователя на сервере и если нет то создавать её
+// TODO проверка наличия файла с таким именем в папке при загрузке на сервер или при скачивании на клиенте

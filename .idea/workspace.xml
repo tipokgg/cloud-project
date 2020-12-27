@@ -22,15 +22,20 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="111d8a75-f2b6-4823-80b1-92620fa0a412" name="Default Changelist" comment="some updates">
+    <list default="true" id="111d8a75-f2b6-4823-80b1-92620fa0a412" name="Default Changelist" comment="big refactoring 26/11/2020">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloud-client/files/1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloud-client/files/Scanned Documents.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloud-client/files/efs_1_171_auto.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloud-client/files/somefile.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cloud-client/src/main/java/ClientApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/cloud-client/src/main/java/ClientApp.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cloud-client/src/main/java/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/cloud-client/src/main/java/Controller.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cloud-client/src/main/resources/layout.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/cloud-client/src/main/resources/layout.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cloud-server/files/user1/efs_1_171_auto.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloud-server/files/user1/1.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cloud-server/files/user1/464456.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cloud-server/src/main/java/ClientMessageHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/cloud-server/src/main/java/ClientMessageHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/library/src/main/java/ChunkFileMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/library/src/main/java/ChunkFileMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/library/src/main/java/ReadyForUploadMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/library/src/main/java/ReadyForUploadMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/library/src/main/java/RequestFileDownloadMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/library/src/main/java/RequestFileDownloadMessage.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,7 +86,7 @@
       <recent name="$PROJECT_DIR$/cloud-client/src/main/java" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Server">
+  <component name="RunManager" selected="Application.ClientApp">
     <configuration name="ClientApp" type="Application" factoryName="Application" singleton="false" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ClientApp" />
       <module name="cloud-client" />
@@ -123,7 +128,14 @@
       <option name="project" value="LOCAL" />
       <updated>1608586981926</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="big refactoring 26/11/2020">
+      <created>1609004064880</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1609004064880</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -143,7 +155,8 @@
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
     <MESSAGE value="first commit. only file sender with hardcode here..." />
-    <option name="LAST_COMMIT_MESSAGE" value="first commit. only file sender with hardcode here..." />
+    <MESSAGE value="big refactoring 26/11/2020" />
+    <option name="LAST_COMMIT_MESSAGE" value="big refactoring 26/11/2020" />
   </component>
   <component name="WindowStateProjectService">
     <state x="1012" y="534" width="525" height="323" key="#Notifications" timestamp="1608587197784">
@@ -162,14 +175,14 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1020" y="504" width="541" height="384" key="#com.intellij.fileTypes.FileTypeChooser/0.0.2560.1400@0.0.2560.1400" timestamp="1609003146185" />
-    <state x="1088" y="408" width="374" height="575" key="#com.intellij.ide.util.MemberChooser" timestamp="1609002590730">
+    <state x="1088" y="408" width="374" height="575" key="#com.intellij.ide.util.MemberChooser" timestamp="1609079496504">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="1088" y="408" width="374" height="575" key="#com.intellij.ide.util.MemberChooser/0.0.2560.1400@0.0.2560.1400" timestamp="1609002590730" />
-    <state x="839" y="191" width="862" height="1004" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1609002493596">
+    <state x="1088" y="408" width="374" height="575" key="#com.intellij.ide.util.MemberChooser/0.0.2560.1400@0.0.2560.1400" timestamp="1609079496504" />
+    <state x="839" y="191" width="862" height="1004" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1609080153432">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="839" y="191" width="862" height="1004" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1609002493596" />
+    <state x="839" y="191" width="862" height="1004" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1609080153432" />
     <state x="1013" y="449" width="524" height="494" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1608576064777">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
@@ -186,22 +199,22 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1038" y="400" width="474" height="591" key="Github.UntrackedFilesDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1608586832972" />
-    <state width="2518" height="396" key="GridCell.Tab.0.bottom" timestamp="1609003295506">
+    <state width="2518" height="396" key="GridCell.Tab.0.bottom" timestamp="1609086645182">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2518" height="396" key="GridCell.Tab.0.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1609003295506" />
-    <state width="2518" height="396" key="GridCell.Tab.0.center" timestamp="1609003295506">
+    <state width="2518" height="396" key="GridCell.Tab.0.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1609086645182" />
+    <state width="2518" height="396" key="GridCell.Tab.0.center" timestamp="1609086645182">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2518" height="396" key="GridCell.Tab.0.center/0.0.2560.1400@0.0.2560.1400" timestamp="1609003295506" />
-    <state width="2518" height="396" key="GridCell.Tab.0.left" timestamp="1609003295505">
+    <state width="2518" height="396" key="GridCell.Tab.0.center/0.0.2560.1400@0.0.2560.1400" timestamp="1609086645182" />
+    <state width="2518" height="396" key="GridCell.Tab.0.left" timestamp="1609086645181">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2518" height="396" key="GridCell.Tab.0.left/0.0.2560.1400@0.0.2560.1400" timestamp="1609003295505" />
-    <state width="2518" height="396" key="GridCell.Tab.0.right" timestamp="1609003295506">
+    <state width="2518" height="396" key="GridCell.Tab.0.left/0.0.2560.1400@0.0.2560.1400" timestamp="1609086645181" />
+    <state width="2518" height="396" key="GridCell.Tab.0.right" timestamp="1609086645182">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2518" height="396" key="GridCell.Tab.0.right/0.0.2560.1400@0.0.2560.1400" timestamp="1609003295506" />
+    <state width="2518" height="396" key="GridCell.Tab.0.right/0.0.2560.1400@0.0.2560.1400" timestamp="1609086645182" />
     <state width="2518" height="486" key="GridCell.Tab.1.bottom" timestamp="1608830385686">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
@@ -222,10 +235,10 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="763" y="276" width="1024" height="839" key="SettingsEditor/0.0.2560.1400@0.0.2560.1400" timestamp="1608587716208" />
-    <state x="875" y="435" width="800" height="522" key="Vcs.Push.Dialog.v2" timestamp="1608587206823">
+    <state x="875" y="435" width="800" height="522" key="Vcs.Push.Dialog.v2" timestamp="1609004069151">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="875" y="435" width="800" height="522" key="Vcs.Push.Dialog.v2/0.0.2560.1400@0.0.2560.1400" timestamp="1608587206823" />
+    <state x="875" y="435" width="800" height="522" key="Vcs.Push.Dialog.v2/0.0.2560.1400@0.0.2560.1400" timestamp="1609004069151" />
     <state x="818" y="438" width="914" height="619" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1608842719612">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>

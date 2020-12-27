@@ -3,8 +3,8 @@ import java.io.*;
 public class ChunkFileMessage extends AbstractMessage {
 
     // класс который генерирует чанки
-    private File clientSideFile;
-    private File severSideFile; // сам файл
+    private File senderFile;
+    private File receiverFile; // сам файл
     private byte[] data; // буффер, куда будут записаны байты из файла
     private int position; // позиция, с которой будут читаться байты из файла
 
@@ -12,11 +12,11 @@ public class ChunkFileMessage extends AbstractMessage {
     }
 
 
-    public ChunkFileMessage(File severSideFile, File clientSideFile, int position, int chunkSize) {
+    public ChunkFileMessage(File receiverFile, File senderFile, int position, int chunkSize) {
         // размер чанка
         data = new byte[chunkSize]; // создаем буффер нужного размера
-        this.clientSideFile = clientSideFile;
-        this.severSideFile = severSideFile;
+        this.senderFile = senderFile;
+        this.receiverFile = receiverFile;
         this.position = position;
         fillArray(this.position); // вызываем метод, который заполнит буффер
     }
@@ -24,7 +24,7 @@ public class ChunkFileMessage extends AbstractMessage {
 
     public void fillArray(int position) {
         // открыаем RandomAccessFile
-        try (RandomAccessFile raf = new RandomAccessFile(clientSideFile, "r")) {
+        try (RandomAccessFile raf = new RandomAccessFile(senderFile, "r")) {
             // устаналивем указатель на нужную позицию
             raf.seek(position);
             // и читаем в буффер
@@ -35,20 +35,20 @@ public class ChunkFileMessage extends AbstractMessage {
 
     }
 
-    public File getClientSideFile() {
-        return clientSideFile;
+    public File getSenderFile() {
+        return senderFile;
     }
 
-    public void setClientSideFile(File clientSideFile) {
-        this.clientSideFile = clientSideFile;
+    public void setSenderFile(File senderFile) {
+        this.senderFile = senderFile;
     }
 
-    public File getSeverSideFile() {
-        return severSideFile;
+    public File getReceiverFile() {
+        return receiverFile;
     }
 
-    public void setSeverSideFile(File severSideFile) {
-        this.severSideFile = severSideFile;
+    public void setReceiverFile(File receiverFile) {
+        this.receiverFile = receiverFile;
     }
 
     public byte[] getData() {

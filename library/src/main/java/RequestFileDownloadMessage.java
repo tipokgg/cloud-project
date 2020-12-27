@@ -1,14 +1,24 @@
+import java.io.File;
+
 public class RequestFileDownloadMessage extends AbstractMessage {
 
     private String fileName;
-    private String userName;
+    private File clientSideFile;
 
     public RequestFileDownloadMessage() {
     }
 
-    public RequestFileDownloadMessage(String fileName, String userName) {
+    public RequestFileDownloadMessage(String fileName, File clientSideFile) {
         this.fileName = fileName;
-        this.userName = userName;
+        this.clientSideFile = clientSideFile;
+    }
+
+    public File getClientSideFile() {
+        return clientSideFile;
+    }
+
+    public void setClientSideFile(File clientSideFile) {
+        this.clientSideFile = clientSideFile;
     }
 
     public String getFileName() {
@@ -19,11 +29,5 @@ public class RequestFileDownloadMessage extends AbstractMessage {
         this.fileName = fileName;
     }
 
-    public String getUserName() {
-        return userName;
-    }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
 }

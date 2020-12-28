@@ -1,6 +1,7 @@
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 
@@ -10,11 +11,13 @@ public class ClientApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("layout.fxml"));
+        Image e = new Image("cloud-icon.png");
         Parent root = fxmlLoader.load();
         Scene mainScene = new Scene(root);
         Controller controller = fxmlLoader.getController();
         controller.setPrimaryStage(primaryStage);
         controller.setMainScene(mainScene);
+        primaryStage.getIcons().add(e);
         primaryStage.setScene(controller.getLoginScene());
         primaryStage.setResizable(false);
         primaryStage.setTitle("GB Cloud Project");
@@ -22,9 +25,5 @@ public class ClientApp extends Application {
     }
 }
 
-// TODO перемещение по каталогам (частично сделано)
-// TODO сделать возможность вернуться на каталог выше (доделать возмонжные ошибки, типа выход за пределы пути)
-// TODO Добавлять папки наверх списка файлов
-// TODO сделать выбор стартовой пааки клиента?
-// TODO рейнейм файла на сервере
-// TODO проверка наличия файла с таким именем в папке при загрузке на сервер или при скачивании на клиенте
+// TODO refactor refactor refactor... проверки на null. чтобы null не уходили на сервер от клиента и наоборот.
+// TODO расставить логгер на ВСЕ события как так клиенте так и на севере

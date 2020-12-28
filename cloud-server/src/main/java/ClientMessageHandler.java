@@ -8,9 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,7 +40,10 @@ public class ClientMessageHandler extends SimpleChannelInboundHandler<AbstractMe
             }
         } else if (msg instanceof InitFileTransferMessage) { //пришёл запрос на upload от клиента
             InitFileTransferMessage init = (InitFileTransferMessage) msg;
-            ctx.writeAndFlush(new ReadyForUploadMessage(init.getFile(), new File(users.get(ctx).getCurrentDir() + init.getFileName())));
+            File file = new File(users.get(ctx).getCurrentDir() + init.getFileName());
+            if (file.exists() && !file.isDirectory()) {
+                ctx.writeAndFlush(new ExceptionMessage("File " + file.getName() + " already exist!"));
+            } else ctx.writeAndFlush(new ReadyForUploadMessage(init.getFile(), file));
         } else if (msg instanceof ChunkFileMessage) { // пришёл чанк от клиента
             ChunkFileMessage chunk = (ChunkFileMessage) msg;
             try (RandomAccessFile raf = new RandomAccessFile(chunk.getReceiverFile(), "rw")) {
@@ -58,13 +59,47 @@ public class ClientMessageHandler extends SimpleChannelInboundHandler<AbstractMe
             ctx.writeAndFlush(new FileListMessage(getUserFiles(ctx)));
         } else if (msg instanceof RequestFileDeleteMessage) {
             String fileName = ((RequestFileDeleteMessage) msg).getFileName();
-            Files.deleteIfExists(Paths.get(users.get(ctx).getCurrentDir() + fileName));
+            LOG.info("Request for delete " + (fileName + " from " + users.get(ctx).getUserName()));
+            if (fileName.startsWith("<DIR> ")) fileName = fileName.substring(6);
+            try {
+                Files.deleteIfExists(Paths.get(users.get(ctx).getCurrentDir() + fileName));
+            } catch (DirectoryNotEmptyException e) {
+                   LOG.error("User " + users.get(ctx).getUserName() + " try to delete not empty directory " +
+                           users.get(ctx).getCurrentDir() + fileName);
+                   ctx.writeAndFlush(new ExceptionMessage("Directory " + fileName +
+                           " is not empty! First remove the attached files and folders"));
+            }
             ctx.writeAndFlush(new FileListMessage(getUserFiles(ctx)));
         } else if (msg instanceof DisconnectMessage) {
             LOG.info("User " + users.get(ctx).getUserName() + " disconnected from the server");
             users.remove(ctx);
-        } else LOG.error("ERROR. Unknown message type!");
+        } else if (msg instanceof ChangeCurrentDirMessage) {
+            String newDirName = ((ChangeCurrentDirMessage) msg).getNewDirName();
+            String currentDir = users.get(ctx).getCurrentDir();
+
+            if (newDirName.equals(". .")) {
+                String newCurrentDir = currentDir.substring(0, currentDir.length() - 1);
+                newCurrentDir = newCurrentDir.substring(0, newCurrentDir.lastIndexOf("/") + 1);
+                users.get(ctx).setCurrentDir(newCurrentDir);
+                LOG.info("New curr dir for " +  users.get(ctx).getUserName() + " is " +  users.get(ctx).getCurrentDir());
+            } else if (newDirName.startsWith("<DIR> ")) {
+                String newServerDir = newDirName.substring(6) + "/";
+                currentDir += newServerDir;
+                users.get(ctx).setCurrentDir(currentDir);
+                LOG.info("New curr dir for " +  users.get(ctx).getUserName() + " is " +  users.get(ctx).getCurrentDir());
+            }
+            ctx.writeAndFlush(new FileListMessage(getUserFiles(ctx)));
+        } else if (msg instanceof RenameFileMessage) {
+            RenameFileMessage rfm = (RenameFileMessage) msg;
+            renameFile(ctx, rfm.getCurrentFileName(), rfm.getNewFileName());
+            ctx.writeAndFlush(new FileListMessage(getUserFiles(ctx)));
+        } else if (msg instanceof CreateFolderMessage) {
+            createFolder(ctx, ((CreateFolderMessage) msg).getFolderName());
+            ctx.writeAndFlush(new FileListMessage(getUserFiles(ctx)));
+        }
+        else LOG.error("ERROR. Unknown message type!");
     }
+
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -74,16 +109,19 @@ public class ClientMessageHandler extends SimpleChannelInboundHandler<AbstractMe
 
     private List<String> getUserFiles(ChannelHandlerContext ctx) {
 
-        File[] files = Objects.requireNonNull(new File(users.get(ctx).getCurrentDir()).listFiles());
+        File[] files = new File(users.get(ctx).getCurrentDir()).listFiles();
         List<String> filesString = new ArrayList<>();
 
+        if (files != null)
         for (File file : files) {
             if (file.isDirectory()) {
-                filesString.add("<DIR> " + file.getName());
+                filesString.add(0, "<DIR> " + file.getName());
             } else {
                 filesString.add(file.getName());
             }
         }
+
+        if (!users.get(ctx).getCurrentDir().equals(users.get(ctx).getRootDir())) filesString.add(0, ". .");
 
         return filesString;
 
@@ -103,7 +141,7 @@ public class ClientMessageHandler extends SimpleChannelInboundHandler<AbstractMe
         long countOfChunks = serverSideFile.length()/1024 + 1;
 
         new Thread(() -> {
-            // устанавливаем начальную позичию, откуда читать файл
+            // устанавливаем начальную позицию, откуда читать файл
             int currentPosition = 0;
             for (int i = 0; i < countOfChunks; i++) {
                 if (i != countOfChunks -1) {
@@ -116,7 +154,29 @@ public class ClientMessageHandler extends SimpleChannelInboundHandler<AbstractMe
                     ctx.flush();
                 }
             }
-
         }).start();
     }
+
+    private void renameFile(ChannelHandlerContext ctx, String currentName, String newName) {
+        String currentDir = users.get(ctx).getCurrentDir();
+        Path source = Paths.get(currentDir + currentName);
+        try {
+            Files.move(source, source.resolveSibling(newName));
+        } catch (FileAlreadyExistsException e) {
+            ctx.writeAndFlush(new ExceptionMessage("File " + newName + " is already exists!"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createFolder(ChannelHandlerContext ctx, String folderName) throws IOException {
+
+        Path folderNamePath = Paths.get(users.get(ctx).getCurrentDir() + folderName);
+        if (Files.exists(folderNamePath)) {
+            ctx.writeAndFlush(new ExceptionMessage("Folder \"" + folderName + "\" already exists!"));
+        } else {
+            Files.createDirectory(folderNamePath);
+        }
+    }
+
 }

@@ -7,10 +7,12 @@ public class AuthorizedClient {
 
     private String userName;
     private String currentDir;
+    private String rootDir;
 
     public AuthorizedClient(String userName) {
         this.userName = userName;
-        setCurrentDir("cloud-server/files/" + userName + "/");
+        setRootDir("cloud-server/files/" + userName + "/");
+        this.currentDir = this.rootDir;
     }
 
     public String getUserName() {
@@ -26,7 +28,15 @@ public class AuthorizedClient {
     }
 
     public void setCurrentDir(String currentDir) {
-        Path path = Paths.get(currentDir);
+        this.currentDir = currentDir;
+    }
+
+    public String getRootDir() {
+        return rootDir;
+    }
+
+    public void setRootDir(String rootDir) {
+        Path path = Paths.get(rootDir);
         if (!Files.exists(path)) {
             try {
                 Files.createDirectory(path);
@@ -34,8 +44,6 @@ public class AuthorizedClient {
                 e.printStackTrace();
             }
         }
-        this.currentDir = currentDir;
+        this.rootDir = rootDir;
     }
-
-
 }

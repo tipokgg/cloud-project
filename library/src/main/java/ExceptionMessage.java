@@ -1,6 +1,6 @@
 public class ExceptionMessage extends AbstractMessage {
 
-    String exceptionText;
+    private String exceptionText;
 
     public ExceptionMessage() {
     }
